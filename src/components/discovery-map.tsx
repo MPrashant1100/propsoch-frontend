@@ -47,16 +47,16 @@ interface Location {
 export const renderIcon = (
   icon: JSX.Element,
   ariaLabel: string,
-  transform = "translate(-8px, -4px)"
+  transform = "translate(-8px, -4px)",
 ) =>
   `<div style="transform: ${transform}" aria-label="${ariaLabel}" role="button">${renderToString(
-    icon
+    icon,
   )}</div>`;
 
 function getOtherLocationIcon(
   label: string,
   isSelected: boolean,
-  icon = true
+  icon = true,
 ): L.DivIcon {
   return L.divIcon({
     html: renderIcon(
@@ -64,7 +64,7 @@ function getOtherLocationIcon(
         {label}
       </Badge>,
       label,
-      isSelected ? "translate(-10px, -20px)" : "translate(-15px, -20px)"
+      isSelected ? "translate(-10px, -20px)" : "translate(-15px, -20px)",
     ),
   });
 }
@@ -98,8 +98,8 @@ function MapController({
 export default function DiscoveryMap({
   allFilteredData,
 }: Readonly<{ allFilteredData: any }>) {
-  const [selectedLocation, setSelectedLocation] = useState<LocationType | null>(
-    null
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null,
   );
   const sectionRef = useRef(null);
   const [selectedProperty, setSelectedProperty] =
@@ -108,11 +108,11 @@ export default function DiscoveryMap({
   useEffect(() => {
     if (selectedLocation) {
       const found = allFilteredData.projects.find(
-        (prop: projectListing) => prop.name == selectedLocation.name
+        (prop: projectListing) => prop.name == selectedLocation.name,
       );
       setSelectedProperty(found);
       const el = document.querySelector(
-        `[data-marker-id="${selectedLocation.name}"]`
+        `[data-marker-id="${selectedLocation.name}"]`,
       ) as HTMLElement | null;
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -124,7 +124,6 @@ export default function DiscoveryMap({
   useEffect(() => {
     import("leaflet-defaulticon-compatibility");
   }, []);
-
 
   return (
     <section
@@ -173,8 +172,17 @@ export default function DiscoveryMap({
                   key={project.id}
                   icon={getOtherLocationIcon(
                     project.name,
-                    selectedProperty?.id == project.id
+                    selectedProperty?.id == project.id,
                   )}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedLocation({
+                        lat: project.latitude,
+                        lon: project.longitude,
+                        name: project.name,
+                      });
+                    },
+                  }}
                 />
               ))
             : null}
@@ -204,13 +212,13 @@ export default function DiscoveryMap({
                     className={cn(
                       "aspect-video size-full rounded-lg object-cover transition-all duration-400 ease-in-out",
                       selectedProperty.projectStatus === "soldOut" &&
-                        "grayscale"
+                        "grayscale",
                     )}
                   />
                   <h3
                     className={cn(
                       para({ size: "lg", color: "dark" }),
-                      "font-semibold"
+                      "font-semibold",
                     )}
                   >
                     {selectedProperty.name}
@@ -221,7 +229,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full items-center gap-2"
+                          "flex w-full items-center gap-2",
                         )}
                       >
                         <LocationIcon width={20} height={20} />
@@ -230,7 +238,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full items-center justify-end gap-2"
+                          "flex w-full items-center justify-end gap-2",
                         )}
                       >
                         <PropscoreRating
@@ -245,7 +253,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full max-w-40 items-center gap-2 truncate"
+                          "flex w-full max-w-40 items-center gap-2 truncate",
                         )}
                       >
                         <BudgetIcon width={20} height={20} />
@@ -255,7 +263,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full items-center justify-end gap-2"
+                          "flex w-full items-center justify-end gap-2",
                         )}
                       >
                         <CalendarIcon height={20} width={20} />
@@ -266,7 +274,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full max-w-40 items-center gap-2 truncate"
+                          "flex w-full max-w-40 items-center gap-2 truncate",
                         )}
                       >
                         <HouseIcon width={20} height={20} />
@@ -277,7 +285,7 @@ export default function DiscoveryMap({
                       <span
                         className={cn(
                           para({ color: "dark", size: "sm" }),
-                          "flex w-full items-center justify-end gap-2"
+                          "flex w-full items-center justify-end gap-2",
                         )}
                       >
                         {selectedProperty.minSaleableArea} -{" "}
