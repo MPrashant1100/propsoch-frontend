@@ -3,10 +3,6 @@
 // TODO:  When zooming out, property nodes overlap and become cluttered.
 // Improve visual spacing for a better UI/UX.
 
-import "leaflet/dist/leaflet.css";
-
-// TODO : Clicking a marker should ideally open the popup with the selected property details. Currently not implemented. Implement it.
-
 import { JSX, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +15,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-
+import MarkerClusterGroup from "react-leaflet-cluster";
 import { PropscoreRating } from "@/assets/PropsochRating";
 import {
   cn,
@@ -164,9 +160,9 @@ export default function DiscoveryMap({
           <MapController selectedLocation={selectedLocation} />
 
           {/* Project Location Marker */}
-
-          {allFilteredData && allFilteredData.projects.length > 0
-            ? allFilteredData.projects.map((project: projectListing) => (
+          {allFilteredData && allFilteredData.projects.length > 0 ? (
+            <MarkerClusterGroup chunkedLoading>
+              {allFilteredData.projects.map((project: projectListing) => (
                 <Marker
                   position={[project.latitude, project.longitude]}
                   key={project.id}
@@ -184,8 +180,10 @@ export default function DiscoveryMap({
                     },
                   }}
                 />
-              ))
-            : null}
+              ))}
+            </MarkerClusterGroup>
+          ) : null}
+
           {selectedLocation && selectedProperty && (
             <Popup
               position={[selectedLocation.lat, selectedLocation.lon]}
