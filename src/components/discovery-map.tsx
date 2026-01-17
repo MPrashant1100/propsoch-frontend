@@ -5,10 +5,6 @@
 
 import "leaflet/dist/leaflet.css";
 
-// TODO : This import gives "window is not defined" error in the terminal. Fix it.
-import "leaflet-defaulticon-compatibility";
-
-
 // TODO : Clicking a marker should ideally open the popup with the selected property details. Currently not implemented. Implement it.
 
 import { JSX, useEffect, useRef, useState } from "react";
@@ -123,6 +119,12 @@ export default function DiscoveryMap({
       }
     }
   }, [selectedLocation]);
+
+  // Client-only import to avoid SSR crash
+  useEffect(() => {
+    import("leaflet-defaulticon-compatibility");
+  }, []);
+
 
   return (
     <section
